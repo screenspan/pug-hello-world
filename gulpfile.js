@@ -14,13 +14,37 @@ var jshint =        require('gulp-jshint'),
     uglify =        require('gulp-uglify'),
     rename =        require('gulp-rename'),
     pug =           require('gulp-pug'),
+    data =          require('gulp-data'),
     runSequence =   require('run-sequence'),
     // del =           require('del'),
     fs =            require('fs'),
     browserSync =   require ("browser-sync"),
     svgSprite =     require("gulp-svg-sprites");
 
-// Sprite task
+// Data
+// gulp.task('data', function () {
+//   return gulp.src('/pages/*.pug')
+//     .pipe(data(function (file) {
+//       return JSON.parse(fs.readFileSync('/data/content.json'));
+//     }))
+//     .pipe(pug())
+//     .pipe(gulp.dest(dest));
+// });
+
+// gulp.task('data', function () {
+//   return gulp
+//     // .src(src + "pages/*.pug")
+//     // .pipe(pug({
+//     //     data: {
+//     //       title: "Our Awesome Website",
+//     //       links: ["Link 1", "Link 2", "Link 3"],
+//     //       message: "Hello World!"
+//     //     }
+//     //   }))
+//     // .pipe(gulp.dest('dest'));
+// });
+
+    // Sprite task
 gulp.task('sprites', function () {
     return gulp.src(src + 'img/svg/*.svg')
         .pipe(svgSprite({
@@ -68,6 +92,18 @@ gulp.task('images', function() {
 // Compile pug files
 gulp.task('templates', function buildHTML() {
   return gulp.src(src + 'pages/*.pug')
+    // Get data from local JSON
+    // _________________________________
+    // .pipe(pug({
+    //   data: {
+    //     title: "Our Awesome Website",
+    //     links: ["Link 1", "Link 2", "Link 3"],
+    //     message: "Hello World!"
+    //   }
+    // }))
+    .pipe(data(function (file) {
+      return JSON.parse(fs.readFileSync(src + 'data/data.json'))
+    }))
   .pipe(pug({
     // Your options in here.
     pretty: true,
@@ -89,6 +125,7 @@ gulp.task('watch', function() {
   console.log("===============")
   console.log("Starting Server")
   console.log("---------------")
+  gulp.watch(src + 'data/*.json', ['data'])
   gulp.watch(src + 'img/**/*.*', ['images'])
   gulp.watch(src + 'img/svg/*.*', ['sprites'])
   gulp.watch(src + 'js/*.js', ['lint', 'scripts'])
