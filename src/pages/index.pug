@@ -10,3 +10,7 @@ each story in stories
   h3= story.abstract
   p= story.abstract
   a(href= story.link.url)= story.link.linkname
+
+:markdown-it(linkify langPrefix='highlight-')
+  # this test headline
+  [link](www.google.com)
