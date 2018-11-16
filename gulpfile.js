@@ -5,7 +5,7 @@ var src =   "src/",
 
 
 // Include gulp
-var gulp = require('gulp')
+var gulp = require('gulp');
 
 // Include Our Plugins
 var jshint =        require('gulp-jshint'),
@@ -18,33 +18,13 @@ var jshint =        require('gulp-jshint'),
     runSequence =   require('run-sequence'),
     // del =           require('del'),
     fs =            require('fs'),
-    browserSync =   require ("browser-sync"),
-    svgSprite =     require("gulp-svg-sprites");
+    browserSync =   require ('browser-sync'),
+    svgSprite =     require('gulp-svg-sprites'),
+    responsive =    require('gulp-responsive');
 
-// Data
-// gulp.task('data', function () {
-//   return gulp.src('/pages/*.pug')
-//     .pipe(data(function (file) {
-//       return JSON.parse(fs.readFileSync('/data/content.json'));
-//     }))
-//     .pipe(pug())
-//     .pipe(gulp.dest(dest));
-// });
 
-// gulp.task('data', function () {
-//   return gulp
-//     // .src(src + "pages/*.pug")
-//     // .pipe(pug({
-//     //     data: {
-//     //       title: "Our Awesome Website",
-//     //       links: ["Link 1", "Link 2", "Link 3"],
-//     //       message: "Hello World!"
-//     //     }
-//     //   }))
-//     // .pipe(gulp.dest('dest'));
-// });
 
-    // Sprite task
+// Sprite task
 gulp.task('sprites', function () {
     return gulp.src(src + 'img/svg/*.svg')
         .pipe(svgSprite({
@@ -93,14 +73,6 @@ gulp.task('images', function() {
 gulp.task('templates', function buildHTML() {
   return gulp.src(src + 'pages/*.pug')
     // Get data from local JSON
-    // _________________________________
-    // .pipe(pug({
-    //   data: {
-    //     title: "Our Awesome Website",
-    //     links: ["Link 1", "Link 2", "Link 3"],
-    //     message: "Hello World!"
-    //   }
-    // }))
     .pipe(data(function (file) {
       return JSON.parse(fs.readFileSync(src + 'data/data.json'))
     }))
@@ -113,6 +85,29 @@ gulp.task('templates', function buildHTML() {
   // Reload browser
   .pipe(browserSync.reload({stream: true}));
 })
+
+// Resize images
+gulp.task('img:resize', function () {
+  return gulp.src(src + 'img/bitmaps/*.{png,jpg}')
+    .pipe(responsive({
+      '*': [
+        {
+          width: 700,
+          quality: 80,
+          rename: {
+            suffix: '-700'
+          }
+        }, {
+          width: 320,
+          quality: 80,
+          rename: {
+            suffix: '-320'
+          }
+        }
+      ]
+    }))
+    .pipe(gulp.dest(dest + '/img'));
+});
 
 
 // Watch Files For Changes
@@ -141,5 +136,11 @@ gulp.task('watch', function() {
 // gulp.task('default', ['lint', 'sass', 'scripts', 'templates', 'reloader'])
 gulp.task('default', function(callback){
     runSequence(['images', 'lint', 'sass', 'scripts', 'sprites', 'templates'], ['watch'], callback)
+  }
+)
+
+// Build task
+gulp.task('build', function (callback) {
+  runSequence(['img:resize', 'lint', 'sass', 'scripts', 'sprites', 'templates'], callback)
   }
 )
