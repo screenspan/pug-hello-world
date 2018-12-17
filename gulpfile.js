@@ -95,9 +95,6 @@ gulp.task('img:resize', function () {
           width: 700,
           quality: 80,
           rename: {
-            suffix: '-700'
-          },
-          rename: {
             suffix: '-700',
             extname: '.webp'
           }
@@ -105,11 +102,22 @@ gulp.task('img:resize', function () {
           width: 320,
           quality: 80,
           rename: {
-            suffix: '-320'
-          },
-          rename: {
             suffix: '-320',
             extname: '.webp'
+          }
+        }, {
+          width: 700,
+          quality: 80,
+          rename: {
+            suffix: '-700',
+            extname: '.jpg'
+          }
+        }, {
+          width: 320,
+          quality: 80,
+          rename: {
+            suffix: '-320',
+            extname: '.jpg'
           }
         }
       ]

@@ -1,7 +1,7 @@
 mixin picture(filename, alttext)
   picture
     source(media="(max-width:767px)" srcset="img/" + filename + "-320.webp" type="image/webp")
-    source(media="(max-width:767px)" srcset="img/" + filename + "-320.jpg" type="image/jp")
+    source(media="(max-width:767px)" srcset="img/" + filename + "-320.jpg" type="image/jpg")
     source(media="(min-width:768px)" srcset="img/" + filename + "-700.webp" type="image/webp")
-    source(media="(min-width:768px)" srcset="img/" + filename + "-700.jpg" type="image/jp")
+    source(media="(min-width:768px)" srcset="img/" + filename + "-700.jpg" type="image/jpg")
     img(src="img/" + filename + "-700.jpg" alt=alttext)
