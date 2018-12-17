@@ -64,10 +64,10 @@ gulp.task('scripts', function() {
 })
 
 // Pass through images
-gulp.task('images', function() {
-  return gulp.src(src + "img/**/*.*")
-      .pipe(gulp.dest(dest + "img"));
-});
+// gulp.task('images', function() {
+//   return gulp.src(src + "img/**/*.*")
+//       .pipe(gulp.dest(dest + "img"));
+// });
 
 // Compile pug files
 gulp.task('templates', function buildHTML() {
@@ -143,7 +143,7 @@ gulp.task('watch', function() {
 // Default Task
 // gulp.task('default', ['lint', 'sass', 'scripts', 'templates', 'reloader'])
 gulp.task('default', function(callback){
-    runSequence(['images', 'lint', 'sass', 'scripts', 'sprites', 'templates'], ['watch'], callback)
+  runSequence(['img:resize', 'lint', 'sass', 'scripts', 'sprites', 'templates'], ['watch'], callback)
   }
 )
 
