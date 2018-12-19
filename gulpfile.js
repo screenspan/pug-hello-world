@@ -108,6 +108,7 @@ gulp.task('img:resize', function () {
         }, {
           width: 700,
           quality: 80,
+          progressive: true,
           rename: {
             suffix: '-700',
             extname: '.jpg'
@@ -115,6 +116,7 @@ gulp.task('img:resize', function () {
         }, {
           width: 320,
           quality: 80,
+          progressive: true,
           rename: {
             suffix: '-320',
             extname: '.jpg'
