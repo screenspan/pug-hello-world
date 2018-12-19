@@ -2,3 +2,21 @@ include ../templates/head.pug
 +head("Hello Pug!")
 
 h1 Hello Pug!
+
+h2= title
+
+each story in stories
+  h2= story.headline
+  h3= story.abstract
+  p= story.abstract
+  a(href= story.link.url)= story.link.linkname
+
+:markdown-it(linkify langPrefix='highlight-')
+  # this test headline
+  [link](www.google.com)
+
+
+include ../templates/picture.pug
+.image
+  +picture("courtney-corlew-472738-unsplash","How about a desert wine?")
++picture("sofia-ornelas-366662-unsplash","On the rocks")

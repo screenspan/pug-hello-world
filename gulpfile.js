@@ -5,7 +5,7 @@ var src =   "src/",
 
 
 // Include gulp
-var gulp = require('gulp')
+var gulp = require('gulp');
 
 // Include Our Plugins
 var jshint =        require('gulp-jshint'),
@@ -14,11 +14,15 @@ var jshint =        require('gulp-jshint'),
     uglify =        require('gulp-uglify'),
     rename =        require('gulp-rename'),
     pug =           require('gulp-pug'),
+    data =          require('gulp-data'),
     runSequence =   require('run-sequence'),
     // del =           require('del'),
     fs =            require('fs'),
-    browserSync =   require ("browser-sync"),
-    svgSprite =     require("gulp-svg-sprites");
+    browserSync =   require ('browser-sync'),
+    svgSprite =     require('gulp-svg-sprites'),
+    responsive =    require('gulp-responsive');
+
+
 
 // Sprite task
 gulp.task('sprites', function () {
@@ -60,14 +64,18 @@ gulp.task('scripts', function() {
 })
 
 // Pass through images
-gulp.task('images', function() {
-  return gulp.src(src + "img/**/*.*")
-      .pipe(gulp.dest(dest + "img"));
-});
+// gulp.task('images', function() {
+//   return gulp.src(src + "img/**/*.*")
+//       .pipe(gulp.dest(dest + "img"));
+// });
 
 // Compile pug files
 gulp.task('templates', function buildHTML() {
   return gulp.src(src + 'pages/*.pug')
+    // Get data from local JSON
+    .pipe(data(function (file) {
+      return JSON.parse(fs.readFileSync(src + 'data/data.json'))
+    }))
   .pipe(pug({
     // Your options in here.
     pretty: true,
@@ -77,6 +85,47 @@ gulp.task('templates', function buildHTML() {
   // Reload browser
   .pipe(browserSync.reload({stream: true}));
 })
+
+// Resize images
+gulp.task('img:resize', function () {
+  return gulp.src(src + 'img/bitmaps/*.{png,jpg}')
+    .pipe(responsive({
+      '*': [
+        {
+          width: 700,
+          quality: 80,
+          rename: {
+            suffix: '-700',
+            extname: '.webp'
+          }
+        }, {
+          width: 320,
+          quality: 80,
+          rename: {
+            suffix: '-320',
+            extname: '.webp'
+          }
+        }, {
+          width: 700,
+          quality: 80,
+          progressive: true,
+          rename: {
+            suffix: '-700',
+            extname: '.jpg'
+          }
+        }, {
+          width: 320,
+          quality: 80,
+          progressive: true,
+          rename: {
+            suffix: '-320',
+            extname: '.jpg'
+          }
+        }
+      ]
+    }))
+    .pipe(gulp.dest(dest + '/img'));
+});
 
 
 // Watch Files For Changes
@@ -89,6 +138,7 @@ gulp.task('watch', function() {
   console.log("===============")
   console.log("Starting Server")
   console.log("---------------")
+  gulp.watch(src + 'data/*.json', ['data'])
   gulp.watch(src + 'img/**/*.*', ['images'])
   gulp.watch(src + 'img/svg/*.*', ['sprites'])
   gulp.watch(src + 'js/*.js', ['lint', 'scripts'])
@@ -103,6 +153,12 @@ gulp.task('watch', function() {
 // Default Task
 // gulp.task('default', ['lint', 'sass', 'scripts', 'templates', 'reloader'])
 gulp.task('default', function(callback){
-    runSequence(['images', 'lint', 'sass', 'scripts', 'sprites', 'templates'], ['watch'], callback)
+  runSequence(['img:resize', 'lint', 'sass', 'scripts', 'sprites', 'templates'], ['watch'], callback)
+  }
+)
+
+// Build task
+gulp.task('build', function (callback) {
+  runSequence(['img:resize', 'lint', 'sass', 'scripts', 'sprites', 'templates'], callback)
   }
 )

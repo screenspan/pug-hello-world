@@ -1,0 +1,23 @@
+{
+  "title": "xyz",
+  "stories": [
+    {
+      "headline": "First Story Headline",
+      "subline": "Subline to explain some more",
+      "abstract": "This is a short description of the story",
+      "link": {
+        "linkname": "Link to something",
+        "url": "https://duckduckgo.com/"
+      }
+    },
+    {
+      "headline": "Second Story Headline",
+      "subline": "More info, as if you didn't have enough",
+      "abstract": "This is a short description of the story",
+      "link": {
+        "linkname": "Link to something",
+        "url": "https://duckduckgo.com/"
+      }
+    }
+  ]
+}
